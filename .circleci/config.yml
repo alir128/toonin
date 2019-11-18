@@ -59,10 +59,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Building the extension
-          command: |
-             npm --prefix ./extension run build
-      - run:
           name: Compress extension for storage
           command: pwd && zip -r ./extension.zip ./extension/build
       - run:
