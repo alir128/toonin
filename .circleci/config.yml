@@ -28,7 +28,7 @@ jobs:
           name: Compress extension for storage
           command: zip -r extension.zip ./extension/build
       - store_artifacts: # store this build output. Read more: https://circleci.com/docs/2.0/artifacts/
-          path: extension.zip
+          path: ./extension.zip
           destination: extension
   Build-App:
     docker:
@@ -62,7 +62,7 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            ls ./artifacts
+            
             VERSION=0.1.2
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.1.2 ./artifacts/extension/extension.zip
   # deploy:
@@ -79,7 +79,7 @@ workflows:
   Validate_Build:
     jobs:
       - Build-Extension
-      - Build-App
+      # - Build-App
       - publish-github-release:
           requires:
             - Build-Extension
