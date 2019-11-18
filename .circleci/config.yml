@@ -56,11 +56,16 @@ jobs:
   publish-github-release:
     docker:
       - image: cibuilds/github:0.10
+      - image: circleci/node:latest
     steps:
       - checkout
       - run:
           name: Compress extension for storage
           command: pwd && zip -r ./extension.zip ./extension/build
+      - run:
+          name: Building the extension
+          command: |
+             npm --prefix ./extension run build
       - run:
           name: "Publish Release on GitHub"
           command: |
