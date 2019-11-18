@@ -69,6 +69,8 @@ workflows:
       - Build-Extension
       - Build-App
       - deploy:
-          filters:
-            branches:
-              only: heroku-deployment
+        requires:
+         - Build-App
+        filters:
+          branches:
+            only: heroku-deployment
