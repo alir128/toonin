@@ -4,9 +4,8 @@ jobs:
     # pre-built images: https://circleci.com/docs/2.0/circleci-images/
     docker:
       - image: circleci/node:latest
-    working_directory: /tmp
     steps:
-      - run: mkdir -p workspace && cd workspace
+      - run: mkdir -p workspace && cd $_
       - checkout
       
       # Download and cache dependencies
