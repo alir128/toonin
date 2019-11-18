@@ -47,12 +47,22 @@ jobs:
           name: Building App
           command: |
             npm --prefix ./client run build
+  deploy:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - checkout
+      - run:
+          name: Deploy heroku deployment to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
 workflows:
   version: 2
   Validate_Build:
     jobs:
       - Build-Extension
       - Build-App
-notify:
-  webhooks:
-    - url: https://outlook.office.com/webhook/04e18692-6efb-49e9-9028-139bf917ab16@78aac226-2f03-4b4d-9037-b46d56c55210/CircleCI/30437ffdcb3e400baa80214e81552edc/5b046f8c-07ba-4e2f-a006-653143830ede
+      - deploy:
+          filters:
+            branches:
+              only: heroku-deployment
