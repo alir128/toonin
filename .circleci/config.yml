@@ -57,7 +57,7 @@ jobs:
   publish-github-release:
     docker:
       - image: cibuilds/github:0.10
-      working_directory:  ~/extension
+    working_directory:  ~/extension
     steps:
       - attach_workspace:
           at: ./artifacts
