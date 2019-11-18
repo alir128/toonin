@@ -63,7 +63,7 @@ jobs:
           name: "Publish Release on GitHub"
           command: |
             VERSION=0.1.2
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.1.2 ./artifacts/extension.zip
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.1.2 ./artifacts/extension/extension.zip
   # deploy:
   #   docker:
   #     - image: buildpack-deps:trusty
