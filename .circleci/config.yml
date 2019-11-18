@@ -77,21 +77,31 @@ jobs:
           command: |
             VERSION=0.1.2
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.1.2 /tmp/workspace/extension.zip
-  # deploy:
-  #   docker:
-  #     - image: buildpack-deps:trusty
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Deploy heroku deployment to Heroku
-  #         command: |
-  #           git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+  deploy:
+    machine:
+        enabled: true
+    working_directory: ~/circleci-demo-workflows
+    environment:
+      HEROKU_APP: "toonin"
+    steps:
+      - checkout
+      - run:
+          name: Deploy Master to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP.git master
 workflows:
   version: 2
   Validate_Build:
     jobs:
       - Build-Extension
-      # - Build-App
+      - Build-App
       - publish-github-release:
           requires:
             - Build-Extension
+      - deploy:
+          requires:
+            - Build-Extension
+            - Build-App
+          filters:
+            branches:
+              only: master
