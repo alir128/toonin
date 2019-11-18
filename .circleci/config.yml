@@ -79,4 +79,6 @@ workflows:
     jobs:
       - Build-Extension
       - Build-App
-      - publish-github-release
+      - publish-github-release:
+          requires:
+            - Build-Extension
