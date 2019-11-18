@@ -4,8 +4,10 @@ jobs:
     # pre-built images: https://circleci.com/docs/2.0/circleci-images/
     docker:
       - image: circleci/node:latest
+    working_directory: /tmp
     steps:
       - checkout
+      - run: mkdir -p workspace
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -26,10 +28,17 @@ jobs:
              npm --prefix ./extension run build
       - run:
           name: Compress extension for storage
-          command: pwd && zip -r ./extension.zip ./extension/build
+          command: zip -r ./workspace/extension.zip ./extension/build
       - store_artifacts: # store this build output. Read more: https://circleci.com/docs/2.0/artifacts/
-          path: ./extension.zip
+          path: ./workspace/extension.zip
           destination: extension
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is 
+          # taken to be the root directory of the workspace.
+          root: workspace
+          # Must be relative path from root
+          paths:
+            - extension.zip
   Build-App:
     docker:
       - image: circleci/node:latest
@@ -56,21 +65,19 @@ jobs:
   publish-github-release:
     docker:
       - image: cibuilds/github:0.10
-      - image: circleci/node:latest
     steps:
       - checkout
-      - run:
-          name: Compress extension for storage
-          command: pwd && zip -r ./extension.zip ./extension/build
-      - run:
-          name: Building the extension
-          command: |
-             npm --prefix ./extension run build
+      # - run:
+      #     name: Compress extension for storage
+      #     command: pwd && zip -r ./extension.zip ./extension/build
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /tmp/workspace
       - run:
           name: "Publish Release on GitHub"
           command: |
             VERSION=0.1.2
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.1.2 ./extension.zip
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.1.2 /tmp/workspace/extension.zip
   # deploy:
   #   docker:
   #     - image: buildpack-deps:trusty
