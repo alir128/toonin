@@ -53,6 +53,17 @@ jobs:
           name: Building App
           command: |
             npm --prefix ./client run build
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: ./artifacts
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            VERSION=0.1.2
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.1.2 ./artifacts/extension.zip
   # deploy:
   #   docker:
   #     - image: buildpack-deps:trusty
@@ -68,3 +79,4 @@ workflows:
     jobs:
       - Build-Extension
       - Build-App
+      - publish-github-release
