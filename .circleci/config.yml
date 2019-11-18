@@ -4,12 +4,6 @@ jobs:
     # pre-built images: https://circleci.com/docs/2.0/circleci-images/
     docker:
       - image: circleci/node:latest
-    references:
-      workspace_root: &workspace_root
-        /tmp/workspace
-      attach_workspace: &attach_workspace
-        attach_workspace:
-          at: *workspace_root
     steps:
       - checkout
       # Download and cache dependencies
