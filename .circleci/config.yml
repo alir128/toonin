@@ -66,11 +66,7 @@ jobs:
       - image: cibuilds/github:0.10
     steps:
       - checkout
-      # - run:
-      #     name: Compress extension for storage
-      #     command: pwd && zip -r ./extension.zip ./extension/build
       - attach_workspace:
-          # Must be absolute path or relative path from working_directory
           at: /tmp/workspace
       - run:
           name: "Publish Release on GitHub"
@@ -98,6 +94,9 @@ workflows:
       - publish-github-release:
           requires:
             - Build-Extension
+          filters:
+            branches:
+              only: master
       - deploy:
           requires:
             - Build-Extension
