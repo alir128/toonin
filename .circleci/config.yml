@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: circleci/node:latest
     steps:
-      - checkout:      
+      - checkout   
       # Download and cache dependencies
       - restore_cache:
           keys:
