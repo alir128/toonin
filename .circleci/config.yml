@@ -24,6 +24,12 @@ jobs:
           name: Building the extension
           command: |
              npm --prefix ./extension run build
+      - run:
+          name: Compress extension for storage
+          command: zip -r extension.zip ./extension/build
+      - store_artifacts: # store this build output. Read more: https://circleci.com/docs/2.0/artifacts/
+          path: extension.zip
+          destination: extension
   Build-App:
     docker:
       - image: circleci/node:latest
