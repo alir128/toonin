@@ -5,10 +5,7 @@ jobs:
     docker:
       - image: circleci/node:latest
     steps:
-      - run: mkdir -p workspace && cd $_
-      - checkout:
-        path: /tmp/workspace
-      
+      - checkout:      
       # Download and cache dependencies
       - restore_cache:
           keys:
