@@ -4,7 +4,14 @@ jobs:
     # pre-built images: https://circleci.com/docs/2.0/circleci-images/
     docker:
       - image: circleci/node:latest
+    references:
+      workspace_root: &workspace_root
+        /tmp/workspace
+      attach_workspace: &attach_workspace
+        attach_workspace:
+          at: *workspace_root
     steps:
+      - *attach_workspace
       - checkout
       # Download and cache dependencies
       - restore_cache:
@@ -57,12 +64,13 @@ jobs:
     docker:
       - image: cibuilds/github:0.10
     steps:
-      - attach_workspace:
-          at: ./artifacts
+      - *attach_workspace
+      - persist_to_workspace:
+          root: *workspace_root
       - run:
           name: "Publish Release on GitHub"
           command: |
-            
+            ls
             VERSION=0.1.2
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.1.2 ./artifacts/extension/extension.zip
   # deploy:
