@@ -6,7 +6,7 @@ jobs:
       - image: circleci/node:latest
     working_directory: /tmp
     steps:
-      - run: mkdir -p workspace
+      - run: mkdir -p workspace && cd workspace
       - checkout
       
       # Download and cache dependencies
