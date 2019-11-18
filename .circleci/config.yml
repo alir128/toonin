@@ -11,7 +11,6 @@ jobs:
         attach_workspace:
           at: *workspace_root
     steps:
-      - *attach_workspace
       - checkout
       # Download and cache dependencies
       - restore_cache:
@@ -64,9 +63,8 @@ jobs:
     docker:
       - image: cibuilds/github:0.10
     steps:
-      - *attach_workspace
-      - persist_to_workspace:
-          root: *workspace_root
+      - attach_workspace:
+          at: ./artifacts
       - run:
           name: "Publish Release on GitHub"
           command: |
